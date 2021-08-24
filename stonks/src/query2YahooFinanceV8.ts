@@ -74,7 +74,7 @@ export async function getQuery2FinanceYahooV8(
   period1:number,
   period2:number) : Promise<Query2YahooFinanceV8 | undefined> {
   //&corsDomain=finance.yahoo.com&.tsrc=finance
-  const res = await fetch(`http://corsproxy.cloudno.de/https://query2.finance.yahoo.com/v8/finance/chart/${symbol}`+
+  const res = await fetch(`http://corsproxy.cloudno.de/http://query2.finance.yahoo.com/v8/finance/chart/${symbol}`+
     `?region=US&lang=en-US&interval=${interval}&period1=${period1}&period2=${period2}`, {headers: {"X-Requested-With":"XMLHttpRequest"}})
   if (res.ok) {
     return (await res.json()) as Query2YahooFinanceV8;
