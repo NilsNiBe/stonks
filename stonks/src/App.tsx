@@ -1,7 +1,7 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import { getQuery1FinanceYahooV8, Query1YahooFinanceV8 } from './query1YahooFinanceV8';
+import { getQuery2FinanceYahooV8, Query2YahooFinanceV8 } from './query2YahooFinanceV8';
 
 interface Share {
   symbol: string;
@@ -9,18 +9,22 @@ interface Share {
 }
 
 interface Purchase {
-  time: Date;
+  timeStamp: number;
   amount: number;  
 }
 
 interface ApiResponse{
   symbol: string;
-  res: Query1YahooFinanceV8;
+  res: Query2YahooFinanceV8;
 }
 
-function getDateDiff(date1: Date, date2: Date) : number {
-  var diff = Math.abs(date1.getTime() - date2.getTime());
-  return Math.ceil(diff / (1000 * 3600 * 24));
+// function getDateDiff(date1: Date, date2: Date) : number {
+//   var diff = Math.abs(date1.getTime() - date2.getTime());
+//   return Math.ceil(diff / (1000 * 3600 * 24));
+// }
+
+function getTimeStamp(date: Date) : number {
+  return Math.floor( date.getTime()/1000)
 }
 
 
@@ -29,9 +33,9 @@ const App = () => {
   const [shares, setShares] = React.useState<Share[]>(
     [
       {symbol: "MSFT", purchase: [
-        {amount:1, time: new Date("2021-05-01T19:00:00")}, 
-        {amount:2, time: new Date("2021-07-01T19:00:00")}, 
-        {amount:3, time: new Date("2021-08-01T19:00:00")},
+        {amount:1, timeStamp: getTimeStamp(new Date("2021-05-01T19:00:00"))}, 
+        {amount:2, timeStamp: getTimeStamp(new Date("2021-07-01T19:00:00"))}, 
+        {amount:3, timeStamp: getTimeStamp(new Date("2021-08-01T19:00:00"))},
       ]}
     ]);
 
@@ -40,15 +44,13 @@ const App = () => {
     const responses : ApiResponse[] = [];
 
     shares.forEach(s => {
-      var minDate = new Date(Math.min.apply(null,s.purchase.map(p=>p.time.getTime())));
-      var dateDiff = getDateDiff(new Date(), minDate);
-      
-      const apiCallFuc = async () =>  {
-        // Der Kauf wird als am Tagesanfang interpretiert
-         const res = await getQuery1FinanceYahooV8(s.symbol, `${dateDiff + 1}d`, "1d");
+      const minTimestamp = Math.min.apply(null,s.purchase.map(p=>p.timeStamp));     
+      const nowTimestamp = getTimeStamp(new Date());
+      const apiCallFuc = async () =>  {        
+         const res = await getQuery2FinanceYahooV8(s.symbol, "1d", minTimestamp, nowTimestamp);
          if (res !== undefined){
            responses.push({symbol: s.symbol, res});
-         }        
+         }
       };
       apiCallFuc();
 
