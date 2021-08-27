@@ -1,0 +1,187 @@
+{
+	"info": {
+		"_postman_id": "fa53ca8d-f5ac-4f40-ad87-a028732e9aca",
+		"name": "https://query2.finance.yahoo.com/v10/finance",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "quoteSummary",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseurl}}/v10/finance/quoteSummary/ABB.NS?modules=financialData",
+					"host": [
+						"{{baseurl}}"
+					],
+					"path": [
+						"v10",
+						"finance",
+						"quoteSummary",
+						"ABB.NS"
+					],
+					"query": [
+						{
+							"key": "modules",
+							"value": "financialData"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "chart",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseurl}}/v8/finance/chart/MSFT?period1=1629173721&period2=1629785726&interval=1d",
+					"host": [
+						"{{baseurl}}"
+					],
+					"path": [
+						"v8",
+						"finance",
+						"chart",
+						"MSFT"
+					],
+					"query": [
+						{
+							"key": "period1",
+							"value": "1629173721"
+						},
+						{
+							"key": "period2",
+							"value": "1629785726"
+						},
+						{
+							"key": "interval",
+							"value": "1d"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "serach",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseurl}}/v1/finance/search?q=microso&quotesCount=6&newsCount=0",
+					"host": [
+						"{{baseurl}}"
+					],
+					"path": [
+						"v1",
+						"finance",
+						"search"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "microso"
+						},
+						{
+							"key": "quotesCount",
+							"value": "6"
+						},
+						{
+							"key": "newsCount",
+							"value": "0"
+						},
+						{
+							"key": "enableFuzzyQuery",
+							"value": "false",
+							"disabled": true
+						},
+						{
+							"key": "quotesQueryId",
+							"value": "tss_match_phrase_query",
+							"disabled": true
+						},
+						{
+							"key": "multiQuoteQueryId",
+							"value": "multi_quote_single_token_query",
+							"disabled": true
+						},
+						{
+							"key": "newsQueryId",
+							"value": "news_ss_symbols",
+							"disabled": true
+						},
+						{
+							"key": "enableCb",
+							"value": "false",
+							"disabled": true
+						},
+						{
+							"key": "enableNavLinks",
+							"value": "false",
+							"disabled": true
+						},
+						{
+							"key": "vespaNewsTimeoutMs",
+							"value": "600",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "options",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://query2.finance.yahoo.com/v7/finance/options/AAPL",
+					"protocol": "https",
+					"host": [
+						"query2",
+						"finance",
+						"yahoo",
+						"com"
+					],
+					"path": [
+						"v7",
+						"finance",
+						"options",
+						"AAPL"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseurl",
+			"value": "http://query2.finance.yahoo.com"
+		}
+	]
+}
