@@ -6,6 +6,7 @@ import { SharesTable } from './comps/SharesTable';
 import { SharesInput } from './comps/SharesInput';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
+import { Container, Grid, TextField, Typography } from '@material-ui/core';
 
 export interface Share {
   symbol: string;
@@ -34,38 +35,49 @@ function getTimeStampInSeconds(timeStamp: number) : number {
 
 const App = () => {
 
-  const [shares, setShares] = React.useState<Share[]>(
-    [
-      {symbol: "MSFT", purchases: [
-        {amount:1, timeStamp: new Date("2021-05-01").getTime()}, 
-        {amount:2, timeStamp: new Date("2021-07-01").getTime()}, 
-        {amount:3, timeStamp: new Date("2021-08-01").getTime()},
-      ]},
-      {symbol: "GOOGL.MI", purchases: [
-        {amount:1, timeStamp: new Date("2021-05-01").getTime()}, 
-        {amount:2, timeStamp: new Date("2021-07-01").getTime()}, 
-        {amount:3, timeStamp: new Date("2021-08-01").getTime()},
-      ]}
-    ]);
+  // [
+  //   {symbol: "MSFT", purchases: [
+  //     {amount:1, timeStamp: new Date("2021-05-01").getTime()}, 
+  //     {amount:2, timeStamp: new Date("2021-07-01").getTime()}, 
+  //     {amount:3, timeStamp: new Date("2021-08-01").getTime()},
+  //   ]},
+  //   {symbol: "GOOGL.MI", purchases: [
+  //     {amount:1, timeStamp: new Date("2021-05-01").getTime()}, 
+  //     {amount:2, timeStamp: new Date("2021-07-01").getTime()}, 
+  //     {amount:3, timeStamp: new Date("2021-08-01").getTime()},
+  //   ]}
+  // ]
 
+  // const [shares, dispatchShares] = React.useReducer((state :Share[]) => state, [] as Share[], () => {
+  //   const localDataSharesString = localStorage.getItem("nibeshares");
+  //   return localDataSharesString ? JSON.parse(localDataSharesString) : [];
+  // });
+  const [shares, setShares] = React.useState<Share[]>((() => {
+    const localDataSharesString = localStorage.getItem("nibeshares");
+    return localDataSharesString ? JSON.parse(localDataSharesString) : []
+  })());
   const [chartDataList, setChartDataList] = React.useState<ChartData[]>();
+
+  React.useEffect(() => {
+    localStorage.setItem("nibeshares", JSON.stringify(shares))
+  }, [shares]);
 
   React.useEffect(() => {
     if (shares === undefined) return;
     const responses : ChartData[] = [];
 
-    const apiCallFuc = async () =>  {      
+    const apiCallFuc = async () =>  {
       for(let i=0; i<shares.length;i++){
         const minTimestamp = Math.min.apply(
-          null,shares[i].purchases.map(p=>p.timeStamp));     
+          null,shares[i].purchases.map(p=>p.timeStamp));
         const nowTimestamp = new Date().getTime();
         const res = await query2FinanceYahooV8Chart(
           shares[i].symbol,
           "1d",
-          getTimeStampInSeconds(minTimestamp), 
+          getTimeStampInSeconds(minTimestamp),
           getTimeStampInSeconds(nowTimestamp));
-        if (res !== undefined){
-          responses.push({symbol: shares[i].symbol, res});          
+        if (res !== undefined) {
+          responses.push({symbol: shares[i].symbol, res});
         }
       }
       setChartDataList(responses);
@@ -73,19 +85,28 @@ const App = () => {
     apiCallFuc();        
   }, [shares]);
 
-
-
   return (
     <div className="App">
       <header className="App-header">
         <>
-        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-          <SharesInput handleDateChange={() => {}}/>
-        </MuiPickersUtilsProvider>
-        {chartDataList !== undefined 
-          && <SharesTable shares={shares} chartDataList={chartDataList} />}
+          <Container maxWidth="md" >
+            <Grid container >
+          <SharesInput returnShare={(d, s, a) => {
+            const foundShare = shares.find(x => x.symbol.toUpperCase() === s.toUpperCase());
+            if (foundShare !== undefined) {
+              foundShare.purchases.push({timeStamp: d.getTime(), amount: a})
+            } else {
+              shares.push({
+                symbol: s, 
+                purchases: [{timeStamp: d.getTime(), amount: a}]})
+            }            
+            setShares([...shares]);
+          }}/>
+          {chartDataList !== undefined && chartDataList.length === shares.length
+            && <SharesTable shares={shares} chartDataList={chartDataList} />}
+          </Grid>
+          </Container>
         </>
-      
       </header>
     </div>
   );

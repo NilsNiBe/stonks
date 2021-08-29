@@ -15,7 +15,6 @@ function getIndexOfFirstValueSmallerOrEqual(array: number[], value: number) : nu
 
 function getPriceForTimeStamp(timeStamp: number, result: Result) {
   const index = getIndexOfFirstValueSmallerOrEqual(result.timestamp, timeStamp/1000);
-  console.log(index);
   return result.indicators.quote[0].close[index];
 } 
 

@@ -79,7 +79,7 @@ export interface Quote {
     isYahooFinance: boolean;
 }
 
-export interface Search {
+export interface Query2YahooFinanceV8SearchResponse {
     explains: any[];
     count: number;
     quotes: Quote[];
@@ -99,11 +99,6 @@ export interface Search {
     timeTakenForScreenerField: number;
 }
 
-export interface Query2YahooFinanceV8SearchResponse {
-    search: Search;
-}
-
-
 export async function query2FinanceYahooV8Chart(
   symbol: string,
   interval: string,
@@ -113,20 +108,18 @@ export async function query2FinanceYahooV8Chart(
     `?region=US&lang=en-US&interval=${interval}&period1=${period1}&period2=${period2}`, {headers: {"X-Requested-With":"XMLHttpRequest"}})
   if (res.ok) {
     const foo = await res.json()
-    console.log(foo);
     return (foo) as Query2YahooFinanceV8ChartResponse;
   }
   return undefined
 }
 
 export async function query2FinanceYahooV8Search(
-  symbol: string) {
+  symbol: string) : Promise<Query2YahooFinanceV8SearchResponse | undefined> {
   const res = await fetch(
-    `https://corsproxy.cloudno.de/https://query2.finance.yahoo.com/v8/finance/v1/finance/search`+
-    `?q=${symbol}&quotesCount=6&newsCount=0 `, {headers: {"X-Requested-With":"XMLHttpRequest"}});
+    `https://corsproxy.cloudno.de/https://query2.finance.yahoo.com/v1/finance/search`+
+    `?q=${symbol}&quotesCount=10&newsCount=0`, {headers: {"X-Requested-With":"XMLHttpRequest"}});
   if (res.ok) {
     const foo = await res.json()
-    console.log(foo);
     return (foo) as Query2YahooFinanceV8SearchResponse;
   }
   return undefined
