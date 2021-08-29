@@ -1,25 +1,27 @@
-import { makeStyles, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
+import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
 import React from 'react'
 import { ChartData, Share } from '../App';
+import { Result } from '../query2YahooFinanceV8';
+import { SharesTableRow, theRow } from './SharesTableRow';
+
+function getIndexOfFirstValueSmallerOrEqual(array: number[], value: number) : number {
+  for (let i = array.length; i >=0; i--) {
+    if (array[i] <= value) {
+      return i;
+    }      
+  }
+  return 0;
+}
+
+function getPriceForTimeStamp(timeStamp: number, result: Result) {
+  const index = getIndexOfFirstValueSmallerOrEqual(result.timestamp, timeStamp/1000);
+  console.log(index);
+  return result.indicators.quote[0].close[index];
+} 
 
 interface SharesTableProps {
   shares: Share[];
   chartDataList: ChartData[];
-}
-
-interface theRow {
-  name: string;
-  shareCount: number;
-  closeToday: number;
-  percentChangeToday: number;
-  shareValue: number;
-  rowPurchases: theRowPurchase[];
-}
-
-interface theRowPurchase {
-  timeStamp: number;
-  amount: number;
-  buyPrice: number;
 }
 
 function createRows(share: Share, chartDataList: ChartData[]) : theRow {
@@ -47,19 +49,6 @@ function createRows(share: Share, chartDataList: ChartData[]) : theRow {
   };
 }
 
-const useRowStyles = makeStyles({
-  root: {
-    '& > *': {
-      borderBottom: 'unset',
-    },
-  },
-});
-
-const formatterCurrency = new Intl.NumberFormat("de-DE", {
-  style: "currency",
-  currency: 'EUR'
-})
-
 export const SharesTable = (props : SharesTableProps) => {
   const rows = props.chartDataList === undefined 
     ? [] 
@@ -80,7 +69,7 @@ export const SharesTable = (props : SharesTableProps) => {
         </TableHead>
         <TableBody>
           {rows.map((row) => (
-            <Row key={row.name} row={row}/>
+            <SharesTableRow key={row.name} row={row}/>
           ))}
         </TableBody>
       </Table>
