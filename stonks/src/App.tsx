@@ -37,8 +37,8 @@ interface ChartData{
 //   return Math.ceil(diff / (1000 * 3600 * 24));
 // }
 
-function getTimeStamp(date: Date) : number {
-  return Math.floor( date.getTime()/1000)
+function getTimeStampInSeconds(timeStamp: number) : number {
+  return Math.floor(timeStamp/1000);
 }
 
 
@@ -47,14 +47,14 @@ const App = () => {
   const [shares, setShares] = React.useState<Share[]>(
     [
       {symbol: "MSFT", purchases: [
-        {amount:1, timeStamp: getTimeStamp(new Date("2021-05-01T19:00:00"))}, 
-        {amount:2, timeStamp: getTimeStamp(new Date("2021-07-01T19:00:00"))}, 
-        {amount:3, timeStamp: getTimeStamp(new Date("2021-08-01T19:00:00"))},
+        {amount:1, timeStamp: new Date("2021-05-01T19:00:00").getTime()}, 
+        {amount:2, timeStamp: new Date("2021-07-01T19:00:00").getTime()}, 
+        {amount:3, timeStamp: new Date("2021-08-01T19:00:00").getTime()},
       ]},
-      {symbol: "GOOGL", purchases: [
-        {amount:1, timeStamp: getTimeStamp(new Date("2021-05-01T19:00:00"))}, 
-        {amount:2, timeStamp: getTimeStamp(new Date("2021-07-01T19:00:00"))}, 
-        {amount:3, timeStamp: getTimeStamp(new Date("2021-08-01T19:00:00"))},
+      {symbol: "GOOGL.MI", purchases: [
+        {amount:1, timeStamp: new Date("2021-05-01T19:00:00").getTime()}, 
+        {amount:2, timeStamp: new Date("2021-07-01T19:00:00").getTime()}, 
+        {amount:3, timeStamp: new Date("2021-08-01T19:00:00").getTime()},
       ]}
     ]);
 
@@ -67,8 +67,12 @@ const App = () => {
     const apiCallFuc = async () =>  {      
       for(let i=0; i<shares.length;i++){
         const minTimestamp = Math.min.apply(null,shares[i].purchases.map(p=>p.timeStamp));     
-        const nowTimestamp = getTimeStamp(new Date());
-        const res = await getQuery2FinanceYahooV8(shares[i].symbol, "1d", minTimestamp, nowTimestamp);
+        const nowTimestamp = new Date().getTime();
+        const res = await getQuery2FinanceYahooV8(
+          shares[i].symbol,
+          "1d",
+          getTimeStampInSeconds(minTimestamp), 
+          getTimeStampInSeconds(nowTimestamp));
         if (res !== undefined){
           responses.push({symbol: shares[i].symbol, res});          
         }
@@ -85,6 +89,15 @@ const App = () => {
       },
     },
   });
+
+  const formatterCurrency = new Intl.NumberFormat("de-DE", {
+    style: "currency",
+    currency: 'EUR'
+  })
+
+  function numberWithPercentage(value: number, decimalPlaces: number = 2) : string {
+    return `${value.toFixed(decimalPlaces)} %`
+  }
 
   function getIndexOfFirstValueSmallerOrEqual(array: number[], value: number) : number {
     for (let i = 0; i < array.length; i++) {
@@ -144,7 +157,7 @@ const App = () => {
     const [open, setOpen] = React.useState(false);
     const classes = useRowStyles();
     const row = rowData.row;
-  
+    
     return (
       <React.Fragment>
         <TableRow className={classes.root}>
@@ -157,16 +170,16 @@ const App = () => {
             {row.name}
           </TableCell>
           <TableCell align="right">{row.shareCount}</TableCell>
-          <TableCell align="right">{row.shareValue}</TableCell>
-          <TableCell align="right">{row.closeToday}</TableCell>
-          <TableCell align="right">{row.percentChangeToday}</TableCell>
+          <TableCell align="right">{formatterCurrency.format(row.shareValue)}</TableCell>
+          <TableCell align="right">{formatterCurrency.format(row.closeToday)}</TableCell>
+          <TableCell align="right">{numberWithPercentage(row.percentChangeToday)}</TableCell>
         </TableRow>
         <TableRow>
           <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
             <Collapse in={open} timeout="auto" unmountOnExit>
               <Box margin={1}>
                 <Typography variant="h6" gutterBottom component="div">
-                  History
+                  Käufe
                 </Typography>
                 <Table size="small" aria-label="purchases">
                   <TableHead>
@@ -180,10 +193,10 @@ const App = () => {
                     {row.rowPurchases.map(r => (
                       <TableRow key={r.timeStamp}>
                         <TableCell component="th" scope="row">
-                          {new Date(r.timeStamp).toDateString()}
+                          {new Date(r.timeStamp).toLocaleDateString()}
                         </TableCell>
                         <TableCell>{r.amount}</TableCell>
-                        <TableCell align="right">{r.buyPrice}</TableCell>                        
+                        <TableCell align="right">{formatterCurrency.format(r.buyPrice)}</TableCell>                        
                       </TableRow>
                     ))}
                   </TableBody>
