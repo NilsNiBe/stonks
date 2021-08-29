@@ -3,6 +3,9 @@ import './App.css';
 import { query2FinanceYahooV8Chart, Query2YahooFinanceV8ChartResponse } from './query2YahooFinanceV8';
 import '@fontsource/roboto';
 import { SharesTable } from './comps/SharesTable';
+import { SharesInput } from './comps/SharesInput';
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
 
 export interface Share {
   symbol: string;
@@ -76,7 +79,10 @@ const App = () => {
     <div className="App">
       <header className="App-header">
         <>
-          {chartDataList !== undefined 
+        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+          <SharesInput handleDateChange={() => {}}/>
+        </MuiPickersUtilsProvider>
+        {chartDataList !== undefined 
           && <SharesTable shares={shares} chartDataList={chartDataList} />}
         </>
       
