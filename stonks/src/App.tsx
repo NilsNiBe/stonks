@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import { query2FinanceYahooV8Chart, Query2YahooFinanceV8ChartResponse } from './query2YahooFinanceV8';
+import { query2FinanceYahooV8Chart, query2FinanceYahooV8QuoteSummary, Query2YahooFinanceV8ChartResponse } from './query2YahooFinanceV8';
 import '@fontsource/roboto';
 import { SharesTable } from './comps/SharesTable';
 import { SharesInput } from './comps/SharesInput';
@@ -91,14 +91,17 @@ const App = () => {
         <>
           <Container maxWidth="md" >
             <Grid container >
-          <SharesInput returnShare={(d, s, a) => {
-            const foundShare = shares.find(x => x.symbol.toUpperCase() === s.toUpperCase());
+          <SharesInput returnShare={async (date, symbol, amount) => {
+            if (symbol === "") return;
+            const res = await query2FinanceYahooV8QuoteSummary(symbol);
+            if (res === undefined || res.quoteSummary.result === [] || res.quoteSummary.result === null) return;
+            const foundShare = shares.find(x => x.symbol.toUpperCase() === symbol.toUpperCase());
             if (foundShare !== undefined) {
-              foundShare.purchases.push({timeStamp: d.getTime(), amount: a})
+              foundShare.purchases.push({timeStamp: date.getTime(), amount: amount})
             } else {
               shares.push({
-                symbol: s, 
-                purchases: [{timeStamp: d.getTime(), amount: a}]})
+                symbol: symbol, 
+                purchases: [{timeStamp: date.getTime(), amount: amount}]})
             }            
             setShares([...shares]);
           }}/>
