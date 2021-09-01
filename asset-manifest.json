@@ -1,26 +1,26 @@
 {
   "files": {
-    "main.css": "/stonks/static/css/main.7d180cbf.chunk.css",
-    "main.js": "/stonks/static/js/main.8b8878bb.chunk.js",
-    "main.js.map": "/stonks/static/js/main.8b8878bb.chunk.js.map",
-    "runtime-main.js": "/stonks/static/js/runtime-main.aa228161.js",
-    "runtime-main.js.map": "/stonks/static/js/runtime-main.aa228161.js.map",
+    "main.css": "/stonks/static/css/main.c9ae3eca.chunk.css",
+    "main.js": "/stonks/static/js/main.2db1ed18.chunk.js",
+    "main.js.map": "/stonks/static/js/main.2db1ed18.chunk.js.map",
+    "runtime-main.js": "/stonks/static/js/runtime-main.1c29d569.js",
+    "runtime-main.js.map": "/stonks/static/js/runtime-main.1c29d569.js.map",
     "static/css/2.0ad331b8.chunk.css": "/stonks/static/css/2.0ad331b8.chunk.css",
-    "static/js/2.433de2ea.chunk.js": "/stonks/static/js/2.433de2ea.chunk.js",
-    "static/js/2.433de2ea.chunk.js.map": "/stonks/static/js/2.433de2ea.chunk.js.map",
-    "static/js/3.3f03792e.chunk.js": "/stonks/static/js/3.3f03792e.chunk.js",
-    "static/js/3.3f03792e.chunk.js.map": "/stonks/static/js/3.3f03792e.chunk.js.map",
+    "static/js/2.fe830a22.chunk.js": "/stonks/static/js/2.fe830a22.chunk.js",
+    "static/js/2.fe830a22.chunk.js.map": "/stonks/static/js/2.fe830a22.chunk.js.map",
+    "static/js/3.32a36d9a.chunk.js": "/stonks/static/js/3.32a36d9a.chunk.js",
+    "static/js/3.32a36d9a.chunk.js.map": "/stonks/static/js/3.32a36d9a.chunk.js.map",
     "index.html": "/stonks/index.html",
     "static/css/2.0ad331b8.chunk.css.map": "/stonks/static/css/2.0ad331b8.chunk.css.map",
-    "static/css/main.7d180cbf.chunk.css.map": "/stonks/static/css/main.7d180cbf.chunk.css.map",
-    "static/js/2.433de2ea.chunk.js.LICENSE.txt": "/stonks/static/js/2.433de2ea.chunk.js.LICENSE.txt",
+    "static/css/main.c9ae3eca.chunk.css.map": "/stonks/static/css/main.c9ae3eca.chunk.css.map",
+    "static/js/2.fe830a22.chunk.js.LICENSE.txt": "/stonks/static/js/2.fe830a22.chunk.js.LICENSE.txt",
     "static/media/index.css": "/stonks/static/media/roboto-vietnamese-400-normal.c0bec65d.woff2"
   },
   "entrypoints": [
-    "static/js/runtime-main.aa228161.js",
+    "static/js/runtime-main.1c29d569.js",
     "static/css/2.0ad331b8.chunk.css",
-    "static/js/2.433de2ea.chunk.js",
-    "static/css/main.7d180cbf.chunk.css",
-    "static/js/main.8b8878bb.chunk.js"
+    "static/js/2.fe830a22.chunk.js",
+    "static/css/main.c9ae3eca.chunk.css",
+    "static/js/main.2db1ed18.chunk.js"
   ]
 }
