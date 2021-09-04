@@ -4,9 +4,8 @@ import { query2FinanceYahooV8Chart, query2FinanceYahooV8QuoteSummary, Query2Yaho
 import '@fontsource/roboto';
 import { SharesTable } from './comps/SharesTable';
 import { SharesInput } from './comps/SharesInput';
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
-import DateFnsUtils from '@date-io/date-fns';
-import { Container, Grid, TextField, Typography } from '@material-ui/core';
+import { Container, Grid, } from '@material-ui/core';
+import Background from './img/stonks.jpg'
 
 export interface Share {
   symbol: string;
@@ -85,12 +84,19 @@ const App = () => {
     apiCallFuc();        
   }, [shares]);
 
+  var sectionStyle = {
+    width: "100%",
+    height: "400px",
+    backgroundImage: `url(${ Background})`
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
+      <header className="App-header" style={sectionStyle}>
         <>
+          <section >
           <Container maxWidth="md" >
-            <Grid container >
+            <Grid container style={{backgroundColor: "white", padding: 20}}>
           <SharesInput returnShare={async (date, symbol, amount) => {
             if (symbol === "") return;
             const res = await query2FinanceYahooV8QuoteSummary(symbol);
@@ -100,7 +106,7 @@ const App = () => {
               foundShare.purchases.push({timeStamp: date.getTime(), amount: amount})
             } else {
               shares.push({
-                symbol: symbol, 
+                symbol: symbol,
                 purchases: [{timeStamp: date.getTime(), amount: amount}]})
             }            
             setShares([...shares]);
@@ -109,6 +115,7 @@ const App = () => {
             && <SharesTable shares={shares} chartDataList={chartDataList} />}
           </Grid>
           </Container>
+          </section>
         </>
       </header>
     </div>

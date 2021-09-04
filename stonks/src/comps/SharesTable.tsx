@@ -35,7 +35,7 @@ function createRows(share: Share, chartDataList: ChartData[]) : theRow {
   const shareValue = shareCount * closeToday;
   const rowPurchases = share.purchases.map(x => ({
     timeStamp: x.timeStamp, 
-    amount: x.amount, 
+    amount: x.amount,
     buyPrice: getPriceForTimeStamp(x.timeStamp, result)
   }));
   return {
