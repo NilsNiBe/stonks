@@ -1,20 +1,33 @@
-import React from 'react'
-import { Box, Collapse, IconButton, makeStyles, Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
-import { KeyboardArrowDown, KeyboardArrowUp } from '@material-ui/icons';
+import {
+  Box,
+  Collapse,
+  IconButton,
+  makeStyles,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+} from "@material-ui/core";
+import { KeyboardArrowDown, KeyboardArrowUp } from "@material-ui/icons";
+import React from "react";
 
-function numberWithPercentage(value: number, decimalPlaces: number = 2) : string {
-  return `${value.toFixed(decimalPlaces)} %`
+function numberWithPercentage(
+  value: number,
+  decimalPlaces: number = 2
+): string {
+  return `${value.toFixed(decimalPlaces)} %`;
 }
 
 const formatterCurrency = new Intl.NumberFormat("de-DE", {
   style: "currency",
-  currency: 'EUR'
-})
+  currency: "EUR",
+});
 
 const useRowStyles = makeStyles({
   root: {
-    '& > *': {
-      borderBottom: 'unset',
+    "& > *": {
+      borderBottom: "unset",
     },
   },
 });
@@ -34,16 +47,20 @@ export interface theRowPurchase {
   buyPrice: number;
 }
 
-export const SharesTableRow = (rowData : {row: theRow}) => {
+export const SharesTableRow = (rowData: { row: theRow }) => {
   const [open, setOpen] = React.useState(false);
   const classes = useRowStyles();
-  const row = rowData.row;
-  
+  const { row } = rowData;
+
   return (
-    <React.Fragment>
+    <>
       <TableRow className={classes.root}>
         <TableCell>
-          <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
+          <IconButton
+            aria-label="expand row"
+            size="small"
+            onClick={() => setOpen(!open)}
+          >
             {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
           </IconButton>
         </TableCell>
@@ -51,9 +68,15 @@ export const SharesTableRow = (rowData : {row: theRow}) => {
           {row.name}
         </TableCell>
         <TableCell align="right">{row.shareCount}</TableCell>
-        <TableCell align="right">{formatterCurrency.format(row.shareValue)}</TableCell>
-        <TableCell align="right">{formatterCurrency.format(row.closeToday)}</TableCell>
-        <TableCell align="right">{numberWithPercentage(row.percentChangeToday)}</TableCell>
+        <TableCell align="right">
+          {formatterCurrency.format(row.shareValue)}
+        </TableCell>
+        <TableCell align="right">
+          {formatterCurrency.format(row.closeToday)}
+        </TableCell>
+        <TableCell align="right">
+          {numberWithPercentage(row.percentChangeToday)}
+        </TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -64,9 +87,9 @@ export const SharesTableRow = (rowData : {row: theRow}) => {
               </Typography> */}
               <Table size="small" aria-label="purchases">
                 <TableHead>
-                  <TableRow>                      
+                  <TableRow>
                     <TableCell>Datum</TableCell>
-                    <TableCell>Menge</TableCell>                      
+                    <TableCell>Menge</TableCell>
                     <TableCell align="right">Kaufpreis</TableCell>
                   </TableRow>
                 </TableHead>
@@ -77,7 +100,9 @@ export const SharesTableRow = (rowData : {row: theRow}) => {
                         {new Date(r.timeStamp).toLocaleDateString()}
                       </TableCell>
                       <TableCell>{r.amount}</TableCell>
-                      <TableCell align="right">{formatterCurrency.format(r.buyPrice)}</TableCell>                        
+                      <TableCell align="right">
+                        {formatterCurrency.format(r.buyPrice)}
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -86,6 +111,6 @@ export const SharesTableRow = (rowData : {row: theRow}) => {
           </Collapse>
         </TableCell>
       </TableRow>
-    </React.Fragment>
+    </>
   );
-}
+};
