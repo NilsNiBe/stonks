@@ -32,22 +32,22 @@ const useRowStyles = makeStyles({
   },
 });
 
-export interface theRow {
+export interface TheRow {
   name: string;
   shareCount: number;
   closeToday: number;
   percentChangeToday: number;
   shareValue: number;
-  rowPurchases: theRowPurchase[];
+  rowPurchases: TheRowPurchase[];
 }
 
-export interface theRowPurchase {
+export interface TheRowPurchase {
   timeStamp: number;
   amount: number;
   buyPrice: number;
 }
 
-export const SharesTableRow = (rowData: { row: theRow }) => {
+export const SharesTableRow = (rowData: { row: TheRow }) => {
   const [open, setOpen] = React.useState(false);
   const classes = useRowStyles();
   const { row } = rowData;

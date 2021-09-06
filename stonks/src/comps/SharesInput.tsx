@@ -1,9 +1,12 @@
-import { KeyboardDatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers"
-import React from "react";
-import { parse } from 'date-fns';
 import DateFnsUtils from "@date-io/date-fns";
 import { Fab, Grid, TextField } from "@material-ui/core";
-import { Add } from '@material-ui/icons'
+import { Add } from "@material-ui/icons";
+import {
+  KeyboardDatePicker,
+  MuiPickersUtilsProvider,
+} from "@material-ui/pickers";
+import { parse } from "date-fns";
+import React from "react";
 import { ShareSearchInput } from "./ShareSearchInput";
 
 export interface SharesInputProps {
@@ -21,14 +24,14 @@ export const SharesInput = (props: SharesInputProps) => {
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
-      <Grid container justifyContent="center" >
-        <KeyboardDatePicker      
-          format="dd.MM.yyyy"   
+      <Grid container justifyContent="center">
+        <KeyboardDatePicker
+          format="dd.MM.yyyy"
           id="date-picker-dialog"
           label="Kaufzeitpunkt"
           inputVariant="outlined"
           value={selectedDate}
-          onChange={(date, value) =>{
+          onChange={(date, value) => {
             if (value) {
               const date = parse(value, "dd.MM.yyyy", new Date());
               const validDate = date < new Date() ? date : new Date();
@@ -36,31 +39,38 @@ export const SharesInput = (props: SharesInputProps) => {
             }
           }}
           KeyboardButtonProps={{
-            'aria-label': 'change date',
+            "aria-label": "change date",
           }}
         />
-        <ShareSearchInput symbol={selectedSymbol} setSymbol={setSelectedShare}/>
+        <ShareSearchInput
+          symbol={selectedSymbol}
+          setSymbol={setSelectedShare}
+        />
         <TextField
           id="standard-number"
           label="Anzahl"
-          type="number"          
+          type="number"
           variant="outlined"
           defaultValue={1}
           value={selectedAmount}
           InputLabelProps={{
             shrink: true,
-          }}          
+          }}
           onChange={x => {
             const num = Number(x.target.value);
             if (!isNaN(num)) {
               setSelectedAmount(num);
-            }        
+            }
           }}
         />
         <Fab color="primary" aria-label="add">
-          <Add onClick={() => props.returnShare(selectedDate, selectedSymbol, selectedAmount)}/>
+          <Add
+            onClick={() =>
+              props.returnShare(selectedDate, selectedSymbol, selectedAmount)
+            }
+          />
         </Fab>
       </Grid>
-    </MuiPickersUtilsProvider>    
-  )
-}
+    </MuiPickersUtilsProvider>
+  );
+};
