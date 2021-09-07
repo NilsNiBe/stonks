@@ -74,7 +74,12 @@ export const SharesTableRow = (rowData: { row: TheRow }) => {
         <TableCell align="right">
           {formatterCurrency.format(row.closeToday)}
         </TableCell>
-        <TableCell align="right">
+        <TableCell
+          align="right"
+          style={{
+            color: Math.sign(row.percentChangeToday) === -1 ? "red" : "green",
+          }}
+        >
           {numberWithPercentage(row.percentChangeToday)}
         </TableCell>
       </TableRow>

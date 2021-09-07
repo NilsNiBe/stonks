@@ -9,21 +9,26 @@ interface ShareSearchInputProps {
 }
 
 export const ShareSearchInput = (props: ShareSearchInputProps) => {
-  const [options, setOptions] = React.useState<string[]>([]);
+  const [options, setOptions] = React.useState<
+    { symbol: string; longName: string }[]
+  >([]);
 
   return (
     <Autocomplete
       id="combo-box-demo"
       filterOptions={x => x}
-      value={props.symbol}
-      style={{ width: "200px" }}
+      style={{ width: "400px" }}
       options={options}
-      getOptionLabel={option => option}
+      getOptionSelected={(options, value) => options.symbol === value.symbol}
+      getOptionLabel={option => `${option.symbol} - ${option.longName}`}
       onInputChange={async (_: object, value: string, reason: string) => {
         if (reason === "input") {
+          if (value === "") return;
           const res = await query2FinanceYahooV8Search(value);
           if (res !== undefined) {
-            setOptions(res.quotes.map(x => x.symbol));
+            setOptions(
+              res.quotes.map(x => ({ symbol: x.symbol, longName: x.longname }))
+            );
           }
         } else if (reason === "clear") {
           setOptions([]);
@@ -32,7 +37,13 @@ export const ShareSearchInput = (props: ShareSearchInputProps) => {
       }}
       onClose={(event, reason) => {
         if (reason === "select-option") {
-          props.setSymbol((event.target as any).textContent);
+          const selectedOption = (event.target as any).textContent as string;
+          const option = options.find(
+            x => `${x.symbol} - ${x.longName}` === selectedOption
+          );
+          if (option !== undefined) {
+            props.setSymbol(option.symbol);
+          }
         }
       }}
       renderInput={params => (

@@ -62,7 +62,7 @@ const App = () => {
   const [chartDataList, setChartDataList] = React.useState<ChartData[]>();
 
   React.useEffect(() => {
-    localStorage.setItem("nibeshares", JSON.stringify(shares));
+    localStorage.setItem("stonks", JSON.stringify(shares));
   }, [shares]);
 
   React.useEffect(() => {
@@ -100,9 +100,15 @@ const App = () => {
   return (
     <div className="App">
       <header className="App-header" style={sectionStyle}>
-        <section>
+        <section style={{ margin: 40 }}>
           <Container maxWidth="md">
-            <Grid container style={{ backgroundColor: "white", padding: 20 }}>
+            <Grid
+              container
+              style={{
+                backgroundColor: "lightskyblue",
+                padding: 20,
+              }}
+            >
               <SharesInput
                 returnShare={async (date, symbol, amount) => {
                   if (symbol === "") return;
@@ -110,9 +116,11 @@ const App = () => {
                   if (
                     res === undefined ||
                     res.quoteSummary.result === [] ||
-                    res.quoteSummary.result === null
-                  )
+                    res.quoteSummary.result === null ||
+                    amount <= 0
+                  ) {
                     return;
+                  }
                   const foundShare = shares.find(
                     x => x.symbol.toUpperCase() === symbol.toUpperCase()
                   );

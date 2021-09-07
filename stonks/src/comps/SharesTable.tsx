@@ -44,7 +44,7 @@ function createRows(share: Share, chartDataList: ChartData[]): TheRow {
   const quote = result.indicators.quote[0];
   const closeToday = quote.close[quote.close.length - 1];
   const openToday = quote.open[quote.open.length - 1];
-  const percentChangeToday = (closeToday - openToday) / openToday;
+  const percentChangeToday = ((closeToday - openToday) / openToday) * 100;
   const purchases = share.purchases;
   const shareCount = purchases.map(x => x.amount).reduce((x, y) => x + y);
   const shareValue = shareCount * closeToday;
