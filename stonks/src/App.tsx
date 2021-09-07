@@ -107,6 +107,8 @@ const App = () => {
               style={{
                 backgroundColor: "lightskyblue",
                 padding: 20,
+                borderRadius: 5,
+                boxShadow: "1px 1px 1px gray",
               }}
             >
               <SharesInput
