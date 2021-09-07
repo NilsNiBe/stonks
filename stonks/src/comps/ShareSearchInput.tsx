@@ -17,7 +17,6 @@ export const ShareSearchInput = (props: ShareSearchInputProps) => {
     <Autocomplete
       id="combo-box-demo"
       filterOptions={x => x}
-      style={{ width: "400px" }}
       options={options}
       getOptionSelected={(options, value) => options.symbol === value.symbol}
       getOptionLabel={option => `${option.symbol} - ${option.longName}`}

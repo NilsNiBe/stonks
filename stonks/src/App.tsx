@@ -100,13 +100,13 @@ const App = () => {
   return (
     <div className="App">
       <header className="App-header" style={sectionStyle}>
-        <section style={{ margin: 40 }}>
+        <section style={{ margin: 20 }}>
           <Container maxWidth="md">
             <Grid
               container
               style={{
                 backgroundColor: "lightskyblue",
-                padding: 20,
+                padding: 10,
                 borderRadius: 5,
                 boxShadow: "1px 1px 1px gray",
               }}

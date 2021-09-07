@@ -37,7 +37,7 @@ export const SharesInput = (props: SharesInputProps) => {
           boxShadow: "1px 1px 1px gray",
         }}
       >
-        <Grid item>
+        <Grid item lg={3} md={3} sm={4} xs={12}>
           <KeyboardDatePicker
             format="dd.MM.yyyy"
             id="date-picker-dialog"
@@ -56,13 +56,13 @@ export const SharesInput = (props: SharesInputProps) => {
             }}
           />
         </Grid>
-        <Grid item>
+        <Grid item lg={6} md={6} sm={8} xs={12}>
           <ShareSearchInput
             symbol={selectedSymbol}
             setSymbol={setSelectedShare}
           />
         </Grid>
-        <Grid item>
+        <Grid item lg={2} md={2} sm={4} xs={12}>
           <TextField
             id="standard-number"
             label="Anzahl"
@@ -79,10 +79,9 @@ export const SharesInput = (props: SharesInputProps) => {
                 setSelectedAmount(num);
               }
             }}
-            style={{ width: 80 }}
           />
         </Grid>
-        <Grid item>
+        <Grid item lg={1} md={1} sm={8} xs={12}>
           <Fab color="primary" aria-label="add" size="medium">
             <Add
               onClick={() =>

@@ -71,7 +71,7 @@ export const SharesTable = (props: SharesTableProps) => {
 
   return (
     <TableContainer component={Paper}>
-      <Table aria-label="collapsible table">
+      <Table aria-label="collapsible table" padding="checkbox">
         <TableHead>
           <TableRow>
             <TableCell />
@@ -79,7 +79,7 @@ export const SharesTable = (props: SharesTableProps) => {
             <TableCell align="right">Menge</TableCell>
             <TableCell align="right">Wert</TableCell>
             <TableCell align="right">Preis</TableCell>
-            <TableCell align="right">Tagesänderung</TableCell>
+            <TableCell align="right">G/V</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
