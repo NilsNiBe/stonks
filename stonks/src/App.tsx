@@ -35,34 +35,19 @@ function getTimeStampInSeconds(timeStamp: number): number {
   return Math.floor(timeStamp / 1000);
 }
 
-const App = () => {
-  // [
-  //   {symbol: "MSFT", purchases: [
-  //     {amount:1, timeStamp: new Date("2021-05-01").getTime()},
-  //     {amount:2, timeStamp: new Date("2021-07-01").getTime()},
-  //     {amount:3, timeStamp: new Date("2021-08-01").getTime()},
-  //   ]},
-  //   {symbol: "GOOGL.MI", purchases: [
-  //     {amount:1, timeStamp: new Date("2021-05-01").getTime()},
-  //     {amount:2, timeStamp: new Date("2021-07-01").getTime()},
-  //     {amount:3, timeStamp: new Date("2021-08-01").getTime()},
-  //   ]}
-  // ]
+const localStonks = "stonks";
 
-  // const [shares, dispatchShares] = React.useReducer((state :Share[]) => state, [] as Share[], () => {
-  //   const localDataSharesString = localStorage.getItem("nibeshares");
-  //   return localDataSharesString ? JSON.parse(localDataSharesString) : [];
-  // });
+const App = () => {
   const [shares, setShares] = React.useState<Share[]>(
     (() => {
-      const localDataSharesString = localStorage.getItem("nibeshares");
+      const localDataSharesString = localStorage.getItem(localStonks);
       return localDataSharesString ? JSON.parse(localDataSharesString) : [];
     })()
   );
   const [chartDataList, setChartDataList] = React.useState<ChartData[]>();
 
   React.useEffect(() => {
-    localStorage.setItem("stonks", JSON.stringify(shares));
+    localStorage.setItem(localStonks, JSON.stringify(shares));
   }, [shares]);
 
   React.useEffect(() => {
