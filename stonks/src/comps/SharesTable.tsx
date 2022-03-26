@@ -9,7 +9,7 @@ import {
 } from "@material-ui/core";
 import React from "react";
 import { ChartData, Share } from "../App";
-import { Result } from "../yahoo/query2YahooFinanceV8/api";
+import { Result } from "../yahoo/query2YahooFinanceV8/interfaces";
 import { SharesTableRow, TheRow } from "./SharesTableRow";
 
 function getIndexOfFirstValueSmallerOrEqual(
