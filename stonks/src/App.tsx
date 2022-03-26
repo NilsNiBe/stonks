@@ -8,8 +8,8 @@ import Background from "./img/stonks.jpg";
 import {
   query2FinanceYahooV8Chart,
   query2FinanceYahooV8QuoteSummary,
-  Query2YahooFinanceV8ChartResponse,
-} from "./query2YahooFinanceV8";
+} from "./yahoo/query2YahooFinanceV8/api";
+import { Query2YahooFinanceV8ChartResponse } from "./yahoo/query2YahooFinanceV8/interfaces";
 
 export interface Share {
   symbol: string;

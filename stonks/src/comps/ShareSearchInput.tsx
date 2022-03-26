@@ -1,7 +1,7 @@
 import { TextField } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import React from "react";
-import { query2FinanceYahooV8Search } from "../query2YahooFinanceV8";
+import { query2FinanceYahooV8Search } from "../yahoo/query2YahooFinanceV8/api";
 
 interface ShareSearchInputProps {
   symbol: string;
