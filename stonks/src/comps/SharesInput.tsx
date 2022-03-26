@@ -17,6 +17,7 @@ export const SharesInput = (props: SharesInputProps) => {
   const [selectedDate, setSelectedDate] = React.useState(new Date());
   const [selectedSymbol, setSelectedShare] = React.useState("");
   const [selectedAmount, setSelectedAmount] = React.useState(1);
+  const [selectedPrice, setSelectedPrice] = React.useState(1);
 
   const handleDateChange = (date: Date) => {
     setSelectedDate(date);
@@ -56,10 +57,29 @@ export const SharesInput = (props: SharesInputProps) => {
             }}
           />
         </Grid>
-        <Grid item lg={6} md={6} sm={8} xs={12}>
+        <Grid item lg={4} md={4} sm={4} xs={12}>
           <ShareSearchInput
             symbol={selectedSymbol}
             setSymbol={setSelectedShare}
+          />
+        </Grid>
+        <Grid item lg={2} md={2} sm={4} xs={12}>
+          <TextField
+            id="standard-number"
+            label="Preis"
+            type="number"
+            variant="outlined"
+            value={selectedPrice}
+            defaultValue={1}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            onChange={x => {
+              const num = Number(x.target.value);
+              if (!isNaN(num)) {
+                setSelectedPrice(num);
+              }
+            }}
           />
         </Grid>
         <Grid item lg={2} md={2} sm={4} xs={12}>
