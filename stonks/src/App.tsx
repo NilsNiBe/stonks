@@ -97,7 +97,7 @@ const App = () => {
               }}
             >
               <SharesInput
-                returnShare={async (date, symbol, amount) => {
+                returnShare={async (date, symbol, amount, price) => {
                   if (symbol === "") return;
                   const res = await query2FinanceYahooV8QuoteSummary(symbol);
                   if (

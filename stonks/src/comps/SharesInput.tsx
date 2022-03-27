@@ -7,21 +7,61 @@ import {
 } from "@material-ui/pickers";
 import { parse } from "date-fns";
 import React from "react";
+import { query2FinanceYahooV8Chart } from "../yahoo/query2YahooFinanceV8/api";
 import { ShareSearchInput } from "./ShareSearchInput";
 
 export interface SharesInputProps {
-  returnShare: (date: Date, symbol: string, amount: number) => void;
+  returnShare: (
+    date: Date,
+    symbol: string,
+    amount: number,
+    price?: number
+  ) => void;
 }
 
 export const SharesInput = (props: SharesInputProps) => {
   const [selectedDate, setSelectedDate] = React.useState(new Date());
-  const [selectedSymbol, setSelectedShare] = React.useState("");
+  const [selectedSymbol, setSelectedSymbol] = React.useState("");
   const [selectedAmount, setSelectedAmount] = React.useState(1);
-  const [selectedPrice, setSelectedPrice] = React.useState(1);
+  const [selectedPrice, setSelectedPrice] = React.useState<number>();
 
-  const handleDateChange = (date: Date) => {
+  async function setSelectedShare(symbol: string, date: Date) {
+    setSelectedSymbol(symbol);
     setSelectedDate(date);
-  };
+    if (symbol === "") {
+      setSelectedPrice(undefined);
+    } else {
+      const startDate = new Date(date.getTime());
+      startDate.setDate(startDate.getDate() - 5);
+      const endDate = new Date(date.getTime());
+      endDate.setDate(endDate.getDate() + 1);
+      const res = await query2FinanceYahooV8Chart(
+        symbol,
+        "1d",
+        Math.round(startDate.setUTCHours(0, 0, 0) / 1000),
+        Math.round(endDate.setUTCHours(23, 59, 59) / 1000)
+      );
+      const result = res?.chart.result[0];
+      if (result !== undefined) {
+        const quotes = result.indicators.quote;
+        if (
+          quotes.length === 0 ||
+          quotes[0] === undefined ||
+          Object.keys(quotes[0]).length === 0
+        ) {
+          // Stock price not found, get last price
+          setSelectedPrice(
+            Math.round(result.meta.regularMarketPrice * 100) / 100
+          );
+        } else {
+          const openPrices = quotes[0].open;
+          setSelectedPrice(
+            Math.round(openPrices[openPrices.length - 1] * 100) / 100
+          );
+        }
+      }
+    }
+  }
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -45,11 +85,11 @@ export const SharesInput = (props: SharesInputProps) => {
             label="Kaufzeitpunkt"
             inputVariant="outlined"
             value={selectedDate}
-            onChange={(date, value) => {
+            onChange={(_, value) => {
               if (value) {
                 const date = parse(value, "dd.MM.yyyy", new Date());
                 const validDate = date < new Date() ? date : new Date();
-                handleDateChange(validDate);
+                setSelectedShare(selectedSymbol, validDate);
               }
             }}
             KeyboardButtonProps={{
@@ -60,7 +100,7 @@ export const SharesInput = (props: SharesInputProps) => {
         <Grid item lg={4} md={4} sm={4} xs={12}>
           <ShareSearchInput
             symbol={selectedSymbol}
-            setSymbol={setSelectedShare}
+            setSymbol={x => setSelectedShare(x, selectedDate)}
           />
         </Grid>
         <Grid item lg={2} md={2} sm={4} xs={12}>
@@ -70,7 +110,6 @@ export const SharesInput = (props: SharesInputProps) => {
             type="number"
             variant="outlined"
             value={selectedPrice}
-            defaultValue={1}
             InputLabelProps={{
               shrink: true,
             }}
@@ -105,7 +144,12 @@ export const SharesInput = (props: SharesInputProps) => {
           <Fab color="primary" aria-label="add" size="medium">
             <Add
               onClick={() =>
-                props.returnShare(selectedDate, selectedSymbol, selectedAmount)
+                props.returnShare(
+                  selectedDate,
+                  selectedSymbol,
+                  selectedAmount,
+                  selectedPrice
+                )
               }
             />
           </Fab>

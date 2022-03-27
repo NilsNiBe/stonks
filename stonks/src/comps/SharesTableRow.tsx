@@ -9,7 +9,7 @@ import {
   TableHead,
   TableRow,
 } from "@material-ui/core";
-import { KeyboardArrowDown, KeyboardArrowUp } from "@material-ui/icons";
+import { Delete, KeyboardArrowDown, KeyboardArrowUp } from "@material-ui/icons";
 import React from "react";
 
 function numberWithPercentage(
@@ -54,7 +54,7 @@ export const SharesTableRow = (rowData: { row: TheRow }) => {
 
   return (
     <>
-      <TableRow className={classes.root}>
+      <TableRow className={classes.root} style={{ backgroundColor: "#cfe8fc" }}>
         <TableCell>
           <IconButton
             aria-label="expand row"
@@ -96,6 +96,7 @@ export const SharesTableRow = (rowData: { row: TheRow }) => {
                     <TableCell>Datum</TableCell>
                     <TableCell>Menge</TableCell>
                     <TableCell align="right">Kaufpreis</TableCell>
+                    <TableCell align="right" />
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -107,6 +108,14 @@ export const SharesTableRow = (rowData: { row: TheRow }) => {
                       <TableCell>{r.amount}</TableCell>
                       <TableCell align="right">
                         {formatterCurrency.format(r.buyPrice)}
+                      </TableCell>
+                      <TableCell align="right">
+                        <Delete
+                          cursor="pointer"
+                          onClick={x => {
+                            console.log(x.currentTarget);
+                          }}
+                        />
                       </TableCell>
                     </TableRow>
                   ))}
