@@ -7,7 +7,7 @@ import {
   TableBody,
   TableCell,
   TableHead,
-  TableRow,
+  TableRow
 } from "@material-ui/core";
 import { Delete, KeyboardArrowDown, KeyboardArrowUp } from "@material-ui/icons";
 import React from "react";
@@ -42,6 +42,7 @@ export interface TheRow {
 }
 
 export interface TheRowPurchase {
+  id: string;
   timeStamp: number;
   amount: number;
   buyPrice: number;

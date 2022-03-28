@@ -8,6 +8,7 @@ import {
   TableRow,
 } from "@material-ui/core";
 import React from "react";
+import { v4 as uuidv4 } from "uuid";
 import { ChartData, Share } from "../App";
 import { Result } from "../yahoo/query2YahooFinanceV8/interfaces";
 import { SharesTableRow, TheRow } from "./SharesTableRow";
@@ -49,6 +50,7 @@ function createRows(share: Share, chartDataList: ChartData[]): TheRow {
   const shareCount = purchases.map(x => x.amount).reduce((x, y) => x + y);
   const shareValue = shareCount * closeToday;
   const rowPurchases = share.purchases.map(x => ({
+    id: uuidv4(),
     timeStamp: x.timeStamp,
     amount: x.amount,
     buyPrice: getPriceForTimeStamp(x.timeStamp, result),
