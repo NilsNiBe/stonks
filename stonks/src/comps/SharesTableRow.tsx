@@ -112,8 +112,8 @@ export const SharesTableRow = (rowData: { row: TheRow }) => {
                       <TableCell align="right">
                         <Delete
                           cursor="pointer"
-                          onClick={x => {
-                            console.log(x);
+                          onClick={() => {
+                            // DeleteItem(r.timeStamp);
                           }}
                         />
                       </TableCell>

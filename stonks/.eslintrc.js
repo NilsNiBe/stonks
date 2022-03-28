@@ -208,7 +208,7 @@ module.exports = {
         /** Groß-/Kleinschreibung von Variablen- und Methodennamen */
         "@typescript-eslint/naming-convention": [
           warn,
-          ...getNamingConventions({ enforceCamelCaseProperties: true }),
+          ...getNamingConventions({ enforceCamelCaseProperties: false }),
         ],
         /** Strings müssen immer in Anführungszeichen (") stehen, nicht in Apostrophen ('). Ausnahmen: `lorem ${x} ipsum` und 'ein "wichtiges" Wort' */
         "@typescript-eslint/quotes": [warn, "double", { avoidEscape: true }],

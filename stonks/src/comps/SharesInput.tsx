@@ -92,9 +92,6 @@ export const SharesInput = (props: SharesInputProps) => {
                 setSelectedShare(selectedSymbol, validDate);
               }
             }}
-            KeyboardButtonProps={{
-              "aria-label": "change date",
-            }}
           />
         </Grid>
         <Grid item lg={4} md={4} sm={4} xs={12}>
