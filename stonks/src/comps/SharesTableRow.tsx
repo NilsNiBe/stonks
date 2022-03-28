@@ -7,7 +7,7 @@ import {
   TableBody,
   TableCell,
   TableHead,
-  TableRow
+  TableRow,
 } from "@material-ui/core";
 import { Delete, KeyboardArrowDown, KeyboardArrowUp } from "@material-ui/icons";
 import React from "react";
@@ -48,10 +48,16 @@ export interface TheRowPurchase {
   buyPrice: number;
 }
 
-export const SharesTableRow = (rowData: { row: TheRow }) => {
+export interface SharesTableRowProps {
+  row: TheRow;
+}
+
+export const SharesTableRow = (props: SharesTableRowProps) => {
   const [open, setOpen] = React.useState(false);
   const classes = useRowStyles();
-  const { row } = rowData;
+  const { row } = props;
+
+  function deleteRowPurchase(id: string) {}
 
   return (
     <>
@@ -114,7 +120,7 @@ export const SharesTableRow = (rowData: { row: TheRow }) => {
                         <Delete
                           cursor="pointer"
                           onClick={() => {
-                            // DeleteItem(r.timeStamp);
+                            deleteRowPurchase(r.id);
                           }}
                         />
                       </TableCell>

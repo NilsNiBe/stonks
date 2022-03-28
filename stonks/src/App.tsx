@@ -1,15 +1,20 @@
 import "@fontsource/roboto";
 import { Container, Grid } from "@material-ui/core";
 import React from "react";
+import { v4 as uuidv4 } from "uuid";
 import "./App.css";
 import { SharesInput } from "./comps/SharesInput";
 import { SharesTable } from "./comps/SharesTable";
+import { TheRow } from "./comps/SharesTableRow";
 import Background from "./img/stonks.jpg";
 import {
   query2FinanceYahooV8Chart,
   query2FinanceYahooV8QuoteSummary,
 } from "./yahoo/query2YahooFinanceV8/api";
-import { Query2YahooFinanceV8ChartResponse } from "./yahoo/query2YahooFinanceV8/interfaces";
+import {
+  Query2YahooFinanceV8ChartResponse,
+  Result,
+} from "./yahoo/query2YahooFinanceV8/interfaces";
 
 export interface Share {
   symbol: string;
@@ -33,6 +38,26 @@ export interface ChartData {
 
 function getTimeStampInSeconds(timeStamp: number): number {
   return Math.floor(timeStamp / 1000);
+}
+
+function getIndexOfFirstValueSmallerOrEqual(
+  array: number[],
+  value: number
+): number {
+  for (let i = array.length; i >= 0; i--) {
+    if (array[i] <= value) {
+      return i;
+    }
+  }
+  return 0;
+}
+
+function getPriceForTimeStamp(timeStamp: number, result: Result) {
+  const index = getIndexOfFirstValueSmallerOrEqual(
+    result.timestamp,
+    timeStamp / 1000
+  );
+  return result.indicators.quote[0].close[index];
 }
 
 const localStonks = "stonks";
@@ -82,6 +107,38 @@ const App = () => {
     backgroundImage: `url(${Background})`,
   };
 
+  function createRows(share: Share, chartDataList: ChartData[]): TheRow {
+    const name = share.symbol;
+    const result = chartDataList.find(x => x.symbol === share.symbol)!.res.chart
+      .result[0];
+    const quote = result.indicators.quote[0];
+    const closeToday = quote.close[quote.close.length - 1];
+    const openToday = quote.open[quote.open.length - 1];
+    const percentChangeToday = ((closeToday - openToday) / openToday) * 100;
+    const purchases = share.purchases;
+    const shareCount = purchases.map(x => x.amount).reduce((x, y) => x + y);
+    const shareValue = shareCount * closeToday;
+    const rowPurchases = share.purchases.map(x => ({
+      id: uuidv4(),
+      timeStamp: x.timeStamp,
+      amount: x.amount,
+      buyPrice: getPriceForTimeStamp(x.timeStamp, result),
+    }));
+    return {
+      name,
+      shareCount,
+      closeToday,
+      percentChangeToday,
+      shareValue,
+      rowPurchases,
+    };
+  }
+
+  const rows =
+    chartDataList === undefined
+      ? []
+      : shares.map(x => createRows(x, chartDataList));
+
   return (
     <div className="App">
       <header className="App-header" style={sectionStyle}>
@@ -128,7 +185,7 @@ const App = () => {
               {chartDataList !== undefined &&
                 shares?.length > 0 &&
                 chartDataList.length === shares.length && (
-                  <SharesTable shares={shares} chartDataList={chartDataList} />
+                  <SharesTable rows={rows} />
                 )}
             </Grid>
           </Container>
