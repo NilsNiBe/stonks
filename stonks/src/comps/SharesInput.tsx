@@ -127,7 +127,6 @@ export const SharesInput = (props: SharesInputProps) => {
             label="Anzahl"
             type="number"
             variant="outlined"
-            defaultValue={1}
             value={selectedAmount}
             InputLabelProps={{
               shrink: true,

@@ -126,6 +126,7 @@ const App = () => {
                 }}
               />
               {chartDataList !== undefined &&
+                shares?.length > 0 &&
                 chartDataList.length === shares.length && (
                   <SharesTable shares={shares} chartDataList={chartDataList} />
                 )}

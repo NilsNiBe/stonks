@@ -101,7 +101,7 @@ export const SharesTableRow = (rowData: { row: TheRow }) => {
                 </TableHead>
                 <TableBody>
                   {row.rowPurchases.map(r => (
-                    <TableRow key={r.timeStamp}>
+                    <TableRow key={new Date().getTime()}>
                       <TableCell component="th" scope="row">
                         {new Date(r.timeStamp).toLocaleDateString()}
                       </TableCell>
@@ -113,7 +113,7 @@ export const SharesTableRow = (rowData: { row: TheRow }) => {
                         <Delete
                           cursor="pointer"
                           onClick={x => {
-                            console.log(x.currentTarget);
+                            console.log(x);
                           }}
                         />
                       </TableCell>
