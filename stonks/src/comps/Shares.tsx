@@ -1,42 +1,19 @@
 import { Container, Grid } from "@material-ui/core";
 import React from "react";
 import { v4 as uuidv4 } from "uuid";
-import { loadLocalStorage, saveLocalStorage } from "../services/sharesService";
 import {
   query2FinanceYahooV8Chart,
   query2FinanceYahooV8QuoteSummary,
-} from "../yahoo/query2YahooFinanceV8/api";
+} from "../apis/yahooV8/api";
+import { Query2YahooFinanceV8ChartResponse } from "../apis/yahooV8/interfaces";
 import {
-  Query2YahooFinanceV8ChartResponse,
-  Result,
-} from "../yahoo/query2YahooFinanceV8/interfaces";
+  getPriceForTimeStamp,
+  getTimeStampInSeconds,
+} from "../services/calculationService";
+import { loadLocalStorage, saveLocalStorage } from "../services/sharesService";
 import { SharesInput } from "./SharesInput";
 import { SharesTable } from "./SharesTable";
 import { TheRow } from "./SharesTableRow";
-
-function getTimeStampInSeconds(timeStamp: number): number {
-  return Math.floor(timeStamp / 1000);
-}
-
-function getIndexOfFirstValueSmallerOrEqual(
-  array: number[],
-  value: number
-): number {
-  for (let i = array.length; i >= 0; i--) {
-    if (array[i] <= value) {
-      return i;
-    }
-  }
-  return 0;
-}
-
-function getPriceForTimeStamp(timeStamp: number, result: Result) {
-  const index = getIndexOfFirstValueSmallerOrEqual(
-    result.timestamp,
-    timeStamp / 1000
-  );
-  return result.indicators.quote[0].close[index];
-}
 
 export interface Share {
   symbol: string;

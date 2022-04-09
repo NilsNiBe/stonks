@@ -39,7 +39,7 @@ export interface Meta {
   range: string;
   validRanges: string[];
 }
-export interface Quote {
+export interface IndicatorsQuote {
   close: number[];
   high: number[];
   open: number[];
@@ -50,23 +50,23 @@ export interface Adjclose {
   adjclose: number[];
 }
 export interface Indicators {
-  quote: Quote[];
+  quote: IndicatorsQuote[];
   adjclose: Adjclose[];
 }
-export interface Result {
+export interface ChartResult {
   meta: Meta;
   timestamp: number[];
   indicators: Indicators;
 }
 export interface Chart {
-  result: Result[];
+  result: ChartResult[];
   error?: any;
 }
 export interface Query2YahooFinanceV8ChartResponse {
   chart: Chart;
 }
 
-export interface Quote {
+export interface SearchQuote {
   exchange: string;
   shortname: string;
   quoteType: string;
@@ -81,7 +81,7 @@ export interface Quote {
 export interface Query2YahooFinanceV8SearchResponse {
   explains: any[];
   count: number;
-  quotes: Quote[];
+  quotes: SearchQuote[];
   news: any[];
   nav: any[];
   lists: any[];
@@ -274,12 +274,12 @@ export interface FinancialData {
   financialCurrency: string;
 }
 
-export interface Result {
+export interface QuoteSummaryResult {
   financialData: FinancialData;
 }
 
 export interface QuoteSummary {
-  result: Result[];
+  result: QuoteSummaryResult[];
   error?: any;
 }
 

@@ -7,7 +7,7 @@ import {
 } from "@material-ui/pickers";
 import { parse } from "date-fns";
 import React from "react";
-import { query2FinanceYahooV8Chart } from "../yahoo/query2YahooFinanceV8/api";
+import { query2FinanceYahooV8Chart } from "../apis/yahooV8/api";
 import { ShareSearchInput } from "./ShareSearchInput";
 
 export interface SharesInputProps {
