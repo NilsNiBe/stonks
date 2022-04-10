@@ -5,9 +5,11 @@
 ## Handelsplatz
 
 yahoo verwendet die Daten von der NasdaqGS.
-Es gibt por Tag drei Handelszeiten vorbörslich (z.B. von Fri Mar 25 2022 09:00:00 GMT+0100),
-regulär (z.B. von Fri Mar 25 2022 14:30:00 GMT+0100)
-und nachbörslich (z.B. von Fri Mar 25 2022 21:00:00 GMT+0100 bis Sat Mar 26 2022 01:00:00 GMT+0100).
+Es gibt pro Tag drei Handelszeiten:
+
+- vorbörslich (z.B. von Fri Mar 25 2022 09:00:00 GMT+0100),
+- regulär (z.B. von Fri Mar 25 2022 14:30:00 GMT+0100)
+- nachbörslich (z.B. von Fri Mar 25 2022 21:00:00 GMT+0100 bis Sat Mar 26 2022 01:00:00 GMT+0100).
 
 ## Berechnung Gewinn/Verlust pro Tag
 

@@ -36,6 +36,7 @@ export interface TheRow {
   name: string;
   shareCount: number;
   closeToday: number;
+  closeLatestDiff: number;
   percentChangeToday: number;
   shareValue: number;
   rowPurchases: TheRowPurchase[];
@@ -86,7 +87,9 @@ export const SharesTableRow = (props: SharesTableRowProps) => {
             color: Math.sign(row.percentChangeToday) === -1 ? "red" : "green",
           }}
         >
-          {numberWithPercentage(row.percentChangeToday)}
+          {`${row.closeLatestDiff.toFixed(2)} (${numberWithPercentage(
+            row.percentChangeToday
+          )})`}
         </TableCell>
       </TableRow>
       <TableRow>

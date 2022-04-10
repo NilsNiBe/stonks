@@ -1,5 +1,4 @@
 import "@fontsource/roboto";
-import React from "react";
 import "./App.css";
 import { Shares } from "./comps/Shares";
 import Background from "./img/stonks.jpg";

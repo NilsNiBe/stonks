@@ -24,8 +24,8 @@ export const SharesTable = (props: SharesTableProps) => {
             <TableCell />
             <TableCell>Aktie</TableCell>
             <TableCell align="right">Menge</TableCell>
+            <TableCell align="right">Gesamt</TableCell>
             <TableCell align="right">Wert</TableCell>
-            <TableCell align="right">Preis</TableCell>
             <TableCell align="right">G/V</TableCell>
           </TableRow>
         </TableHead>

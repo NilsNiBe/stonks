@@ -3,12 +3,12 @@ import React from "react";
 import { v4 as uuidv4 } from "uuid";
 import {
   query2FinanceYahooV8Chart,
-  query2FinanceYahooV8QuoteSummary
+  query2FinanceYahooV8QuoteSummary,
 } from "../apis/yahooV8/api";
 import { ChartResult } from "../apis/yahooV8/interfaces";
 import {
   getPriceForTimeStamp,
-  getTimeStampInSeconds
+  getTimeStampInSeconds,
 } from "../services/calculationService";
 import { dateAddDays } from "../services/dateService";
 import { loadLocalStorage, saveLocalStorage } from "../services/sharesService";
@@ -84,12 +84,13 @@ export const Shares = () => {
   function createRows(share: Share): TheRow {
     const name = share.symbol;
     const quote = share.chartResult.indicators.quote[0];
-    const closeToday = quote.close[quote.close.length - 1];
-    const openToday = quote.open[quote.open.length - 1];
-    const percentChangeToday = ((closeToday - openToday) / openToday) * 100;
+    const closeDayBefore = quote.close[quote.close.length - 2];
+    const closeLatest = quote.close[quote.open.length - 1];
+    const closeLatestDiff = closeLatest - closeDayBefore;
+    const percentChangeToday = (closeLatestDiff / closeDayBefore) * 100;
     const purchases = share.purchases;
     const shareCount = purchases.map(x => x.amount).reduce((x, y) => x + y);
-    const shareValue = shareCount * closeToday;
+    const shareValue = shareCount * closeDayBefore;
     const rowPurchases = share.purchases
       .map(x => ({
         id: x.id,
@@ -101,7 +102,8 @@ export const Shares = () => {
     return {
       name,
       shareCount,
-      closeToday,
+      closeToday: closeDayBefore,
+      closeLatestDiff,
       percentChangeToday,
       shareValue,
       rowPurchases,
