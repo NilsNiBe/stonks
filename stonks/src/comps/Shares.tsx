@@ -3,13 +3,14 @@ import React from "react";
 import { v4 as uuidv4 } from "uuid";
 import {
   query2FinanceYahooV8Chart,
-  query2FinanceYahooV8QuoteSummary,
+  query2FinanceYahooV8QuoteSummary
 } from "../apis/yahooV8/api";
 import { ChartResult } from "../apis/yahooV8/interfaces";
 import {
   getPriceForTimeStamp,
-  getTimeStampInSeconds,
+  getTimeStampInSeconds
 } from "../services/calculationService";
+import { dateAddDays } from "../services/dateService";
 import { loadLocalStorage, saveLocalStorage } from "../services/sharesService";
 import { SharesInput } from "./SharesInput";
 import { SharesTable } from "./SharesTable";
@@ -22,6 +23,7 @@ export interface Share {
 }
 
 interface Purchase {
+  id: string;
   timeStamp: number;
   amount: number;
 }
@@ -43,7 +45,6 @@ export const Shares = () => {
           ))
       )
     );
-    const t = 1;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -51,8 +52,21 @@ export const Shares = () => {
     setShares([]);
   }
 
-  function deleteShare(share: Share) {
-    setShares(shares.filter(x => x.symbol !== share.symbol));
+  function deleteSharePurchase(id: string) {
+    const shareWithPurchase = shares.find(x =>
+      x.purchases.find(p => p.id === id)
+    );
+    if (shareWithPurchase === undefined) return;
+    const newShares = shares.filter(x => x !== shareWithPurchase);
+    const newPurchases = shareWithPurchase.purchases.filter(x => x.id !== id);
+    if (newPurchases.length > 0) {
+      const newShareWithPurchase = {
+        ...shareWithPurchase,
+        purchases: newPurchases,
+      };
+      newShares.push(newShareWithPurchase);
+    }
+    setShares(newShares);
   }
 
   /** Gets the chart data of a share starting from the first purchase time */
@@ -61,7 +75,7 @@ export const Shares = () => {
     const res = await query2FinanceYahooV8Chart(
       symbol,
       "1d",
-      getTimeStampInSeconds(fromTimeStamp),
+      getTimeStampInSeconds(dateAddDays(new Date(fromTimeStamp), -7).getTime()),
       getTimeStampInSeconds(nowTimestamp)
     );
     return res!.chart.result[0];
@@ -76,12 +90,14 @@ export const Shares = () => {
     const purchases = share.purchases;
     const shareCount = purchases.map(x => x.amount).reduce((x, y) => x + y);
     const shareValue = shareCount * closeToday;
-    const rowPurchases = share.purchases.map(x => ({
-      id: uuidv4(),
-      timeStamp: x.timeStamp,
-      amount: x.amount,
-      buyPrice: getPriceForTimeStamp(x.timeStamp, share.chartResult),
-    }));
+    const rowPurchases = share.purchases
+      .map(x => ({
+        id: x.id,
+        timeStamp: x.timeStamp,
+        amount: x.amount,
+        buyPrice: getPriceForTimeStamp(x.timeStamp, share.chartResult),
+      }))
+      .sort((a, b) => a.timeStamp - b.timeStamp);
     return {
       name,
       shareCount,
@@ -91,11 +107,6 @@ export const Shares = () => {
       rowPurchases,
     };
   }
-
-  // const rows =
-  //   chartDataList === undefined
-  //     ? []
-  //     : shares.map(x => createRows(x, chartDataList));
 
   async function addPurchase(
     date: Date,
@@ -108,6 +119,7 @@ export const Shares = () => {
     );
     if (foundShare !== undefined) {
       foundShare.purchases.push({
+        id: uuidv4(),
         timeStamp: date.getTime(),
         amount,
       });
@@ -121,7 +133,7 @@ export const Shares = () => {
     } else {
       shares.push({
         symbol,
-        purchases: [{ timeStamp: date.getTime(), amount }],
+        purchases: [{ id: uuidv4(), timeStamp: date.getTime(), amount }],
         chartResult: await getChartResultFromApi(symbol, date.getTime()),
       });
     }
@@ -153,12 +165,17 @@ export const Shares = () => {
                 return;
               }
               const shares = await addPurchase(date, symbol, amount);
-              setShares(shares);
+              setShares([...shares]);
               saveLocalStorage(shares);
             }}
           />
           {shares?.length > 0 && (
-            <SharesTable rows={shares.map(x => createRows(x))} />
+            <SharesTable
+              rows={shares
+                .map(x => createRows(x))
+                .sort((a, b) => a.name.localeCompare(b.name))}
+              deleteRowPurchase={deleteSharePurchase}
+            />
           )}
         </Grid>
       </Container>

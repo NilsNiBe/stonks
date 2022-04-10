@@ -12,6 +12,7 @@ import { SharesTableRow, TheRow } from "./SharesTableRow";
 
 interface SharesTableProps {
   rows: TheRow[];
+  deleteRowPurchase: (id: string) => void;
 }
 
 export const SharesTable = (props: SharesTableProps) => {
@@ -30,7 +31,11 @@ export const SharesTable = (props: SharesTableProps) => {
         </TableHead>
         <TableBody>
           {props.rows.map(row => (
-            <SharesTableRow key={row.name} row={row} />
+            <SharesTableRow
+              key={row.name}
+              row={row}
+              deleteRowPurchase={props.deleteRowPurchase}
+            />
           ))}
         </TableBody>
       </Table>

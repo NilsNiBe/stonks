@@ -50,14 +50,13 @@ export interface TheRowPurchase {
 
 export interface SharesTableRowProps {
   row: TheRow;
+  deleteRowPurchase: (id: string) => void;
 }
 
 export const SharesTableRow = (props: SharesTableRowProps) => {
   const [open, setOpen] = React.useState(false);
   const classes = useRowStyles();
   const { row } = props;
-
-  function deleteRowPurchase(id: string) {}
 
   return (
     <>
@@ -108,7 +107,7 @@ export const SharesTableRow = (props: SharesTableRowProps) => {
                 </TableHead>
                 <TableBody>
                   {row.rowPurchases.map(r => (
-                    <TableRow key={new Date().getTime()}>
+                    <TableRow key={r.id}>
                       <TableCell component="th" scope="row">
                         {new Date(r.timeStamp).toLocaleDateString()}
                       </TableCell>
@@ -120,7 +119,7 @@ export const SharesTableRow = (props: SharesTableRowProps) => {
                         <Delete
                           cursor="pointer"
                           onClick={() => {
-                            deleteRowPurchase(r.id);
+                            props.deleteRowPurchase(r.id);
                           }}
                         />
                       </TableCell>
