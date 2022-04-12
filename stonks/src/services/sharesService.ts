@@ -9,5 +9,10 @@ export function loadLocalStorage(): Share[] {
 }
 /** Saves Shares to localStorage */
 export function saveLocalStorage(shares: Share[]) {
-  localStorage.setItem(localStonks, JSON.stringify(shares));
+  localStorage.setItem(
+    localStonks,
+    JSON.stringify(
+      shares.map(x => ({ symbol: x.symbol, purchases: x.purchases }))
+    )
+  );
 }

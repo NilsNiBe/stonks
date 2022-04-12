@@ -6,20 +6,16 @@ import {
   query2FinanceYahooV8QuoteSummary,
 } from "../apis/yahooV8/api";
 import { ChartResult } from "../apis/yahooV8/interfaces";
-import {
-  getPriceForTimeStamp,
-  getTimeStampInSeconds,
-} from "../services/calculationService";
+import { getTimeStampInSeconds } from "../services/calculationService";
 import { dateAddDays } from "../services/dateService";
 import { loadLocalStorage, saveLocalStorage } from "../services/sharesService";
 import { SharesInput } from "./SharesInput";
 import { SharesTable } from "./SharesTable";
-import { TheRow } from "./SharesTableRow";
 
 export interface Share {
   symbol: string;
   purchases: Purchase[];
-  chartResult: ChartResult;
+  chartResult?: ChartResult;
 }
 
 interface Purchase {
@@ -36,21 +32,40 @@ export const Shares = () => {
   const [shares, setShares] = React.useState<Share[]>(loadLocalStorage());
 
   React.useEffect(() => {
-    Promise.all(
-      shares.map(
-        async x =>
-          (x.chartResult = await getChartResultFromApi(
-            x.symbol,
-            getMinTimeStamp(x)
-          ))
-      )
-    );
+    const requests = async () => {
+      setShares(
+        await Promise.all(
+          shares.map(async x => ({
+            ...x,
+            chartResult: await getChartResultFromApi(
+              x.symbol,
+              getMinTimeStamp(x)
+            ),
+          }))
+        )
+      );
+    };
+    requests();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  function deleteAllShares() {
-    setShares([]);
-  }
+  React.useEffect(() => {
+    const id = setInterval(
+      () =>
+        Promise.all(
+          shares.map(
+            async x =>
+              (x.chartResult = await getChartResultFromApi(
+                x.symbol,
+                getMinTimeStamp(x)
+              ))
+          )
+        ),
+      30000
+    );
+    return () => clearInterval(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   function deleteSharePurchase(id: string) {
     const shareWithPurchase = shares.find(x =>
@@ -67,6 +82,7 @@ export const Shares = () => {
       newShares.push(newShareWithPurchase);
     }
     setShares(newShares);
+    saveLocalStorage(newShares);
   }
 
   /** Gets the chart data of a share starting from the first purchase time */
@@ -79,35 +95,6 @@ export const Shares = () => {
       getTimeStampInSeconds(nowTimestamp)
     );
     return res!.chart.result[0];
-  }
-
-  function createRows(share: Share): TheRow {
-    const name = share.symbol;
-    const quote = share.chartResult.indicators.quote[0];
-    const closeDayBefore = quote.close[quote.close.length - 2];
-    const closeLatest = quote.close[quote.open.length - 1];
-    const closeLatestDiff = closeLatest - closeDayBefore;
-    const percentChangeToday = (closeLatestDiff / closeDayBefore) * 100;
-    const purchases = share.purchases;
-    const shareCount = purchases.map(x => x.amount).reduce((x, y) => x + y);
-    const shareValue = shareCount * closeDayBefore;
-    const rowPurchases = share.purchases
-      .map(x => ({
-        id: x.id,
-        timeStamp: x.timeStamp,
-        amount: x.amount,
-        buyPrice: getPriceForTimeStamp(x.timeStamp, share.chartResult),
-      }))
-      .sort((a, b) => a.timeStamp - b.timeStamp);
-    return {
-      name,
-      shareCount,
-      closeToday: closeDayBefore,
-      closeLatestDiff,
-      percentChangeToday,
-      shareValue,
-      rowPurchases,
-    };
   }
 
   async function addPurchase(
@@ -171,14 +158,13 @@ export const Shares = () => {
               saveLocalStorage(shares);
             }}
           />
-          {shares?.length > 0 && (
-            <SharesTable
-              rows={shares
-                .map(x => createRows(x))
-                .sort((a, b) => a.name.localeCompare(b.name))}
-              deleteRowPurchase={deleteSharePurchase}
-            />
-          )}
+          {shares?.length > 0 &&
+            shares.every(x => x.chartResult !== undefined) && (
+              <SharesTable
+                shares={shares}
+                deleteRowPurchase={deleteSharePurchase}
+              />
+            )}
         </Grid>
       </Container>
     </section>

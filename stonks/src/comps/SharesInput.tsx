@@ -8,6 +8,7 @@ import {
 import { parse } from "date-fns";
 import React from "react";
 import { query2FinanceYahooV8Chart } from "../apis/yahooV8/api";
+import { dateAddDays } from "../services/dateService";
 import { ShareSearchInput } from "./ShareSearchInput";
 
 export interface SharesInputProps {
@@ -31,10 +32,8 @@ export const SharesInput = (props: SharesInputProps) => {
     if (symbol === "") {
       setSelectedPrice(undefined);
     } else {
-      const startDate = new Date(date.getTime());
-      startDate.setDate(startDate.getDate() - 5);
-      const endDate = new Date(date.getTime());
-      endDate.setDate(endDate.getDate() + 1);
+      const startDate = dateAddDays(date, -5);
+      const endDate = dateAddDays(date, 5);
       const res = await query2FinanceYahooV8Chart(
         symbol,
         "1d",
