@@ -33,7 +33,7 @@ export const SharesInput = (props: SharesInputProps) => {
       setSelectedPrice(undefined);
     } else {
       const startDate = dateAddDays(date, -5);
-      const endDate = dateAddDays(date, 5);
+      const endDate = dateAddDays(date, 1);
       const res = await query2FinanceYahooV8Chart(
         symbol,
         "1d",
