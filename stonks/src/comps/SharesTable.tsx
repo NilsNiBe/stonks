@@ -19,6 +19,7 @@ interface SharesTableProps {
 
 function createRows(share: Share): TheRow {
   const name = share.symbol;
+  const chartResult = share.chartResult!;
   const quote = share.chartResult!.indicators.quote[0];
   const closeDayBefore = quote.close[quote.close.length - 2];
   const latestValue = quote.close[quote.open.length - 1];
@@ -57,6 +58,7 @@ function createRows(share: Share): TheRow {
     latestValueDiff,
     latestPercentChange,
     rowPurchases,
+    chartResult,
   };
 }
 

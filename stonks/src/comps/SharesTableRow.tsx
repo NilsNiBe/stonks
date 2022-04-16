@@ -11,6 +11,8 @@ import {
 } from "@material-ui/core";
 import { Delete, KeyboardArrowDown, KeyboardArrowUp } from "@material-ui/icons";
 import React from "react";
+import { ChartResult } from "../apis/yahooV8/interfaces";
+import { SharesChart } from "./SharesChart";
 
 function numberWithPercentage(
   value: number,
@@ -42,6 +44,7 @@ export interface TheRow {
   latestValueDiff: number;
   latestPercentChange: number;
   rowPurchases: TheRowPurchase[];
+  chartResult: ChartResult;
 }
 
 export interface TheRowPurchase {
@@ -162,6 +165,7 @@ export const SharesTableRow = (props: SharesTableRowProps) => {
                   ))}
                 </TableBody>
               </Table>
+              <SharesChart chartResult={row.chartResult} />
             </Box>
           </Collapse>
         </TableCell>
