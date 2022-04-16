@@ -28,12 +28,18 @@ function createRows(share: Share): TheRow {
   const totalCount = purchases.map(x => x.amount).reduce((x, y) => x + y);
   const totalValue = totalCount * latestValue;
   const rowPurchases = share.purchases
-    .map(x => ({
-      id: x.id,
-      timeStamp: x.timeStamp,
-      amount: x.amount,
-      buyPrice: getPriceForTimeStamp(x.timeStamp, share.chartResult!),
-    }))
+    .map(x => {
+      const price = getPriceForTimeStamp(x.timeStamp, share.chartResult!);
+      const priceDiff = latestValue - price;
+      return {
+        id: x.id,
+        timeStamp: x.timeStamp,
+        amount: x.amount,
+        buyPrice: price,
+        priceDiff: latestValue - price,
+        percentChange: (priceDiff / price) * 100,
+      };
+    })
     .sort((a, b) => a.timeStamp - b.timeStamp);
   const totalValueAtTimeOfPurchase = rowPurchases
     .map(x => x.buyPrice * x.amount)

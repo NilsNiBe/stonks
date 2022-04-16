@@ -106,7 +106,7 @@ export const Shares = () => {
       if (minTimeStamp > date.getTime()) {
         foundShare.chartResult = await getChartResultFromApi(
           foundShare.symbol,
-          minTimeStamp
+          date.getTime()
         );
       }
       foundShare.purchases.push({

@@ -49,6 +49,8 @@ export interface TheRowPurchase {
   timeStamp: number;
   amount: number;
   buyPrice: number;
+  priceDiff: number;
+  percentChange: number;
 }
 
 export interface SharesTableRowProps {
@@ -117,6 +119,7 @@ export const SharesTableRow = (props: SharesTableRowProps) => {
                     <TableCell>Datum</TableCell>
                     <TableCell>Menge</TableCell>
                     <TableCell align="right">Kaufpreis</TableCell>
+                    <TableCell align="right">G/V</TableCell>
                     <TableCell align="right" />
                   </TableRow>
                 </TableHead>
@@ -124,11 +127,28 @@ export const SharesTableRow = (props: SharesTableRowProps) => {
                   {row.rowPurchases.map(r => (
                     <TableRow key={r.id}>
                       <TableCell component="th" scope="row">
-                        {new Date(r.timeStamp).toLocaleString()}
+                        {new Date(r.timeStamp).toLocaleString([], {
+                          year: "numeric",
+                          month: "numeric",
+                          day: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
                       </TableCell>
                       <TableCell>{r.amount}</TableCell>
                       <TableCell align="right">
                         {formatterCurrency.format(r.buyPrice)}
+                      </TableCell>
+                      <TableCell
+                        align="right"
+                        style={{
+                          color:
+                            Math.sign(r.priceDiff) === -1 ? "red" : "green",
+                        }}
+                      >
+                        {`${r.priceDiff.toFixed(2)} (${numberWithPercentage(
+                          r.percentChange
+                        )})`}
                       </TableCell>
                       <TableCell align="right">
                         <Delete
