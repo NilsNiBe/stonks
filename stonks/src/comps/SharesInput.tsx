@@ -2,7 +2,7 @@ import DateFnsUtils from "@date-io/date-fns";
 import { Fab, Grid, TextField } from "@material-ui/core";
 import { Add } from "@material-ui/icons";
 import {
-  KeyboardDatePicker,
+  KeyboardDateTimePicker,
   MuiPickersUtilsProvider,
 } from "@material-ui/pickers";
 import { parse } from "date-fns";
@@ -21,24 +21,24 @@ export interface SharesInputProps {
 }
 
 export const SharesInput = (props: SharesInputProps) => {
-  const [selectedDate, setSelectedDate] = React.useState(new Date());
+  const [selectedDate, setSelectedDate] = React.useState(
+    new Date(new Date().setHours(12, 0, 0, 0))
+  );
   const [selectedSymbol, setSelectedSymbol] = React.useState("");
   const [selectedAmount, setSelectedAmount] = React.useState(1);
   const [selectedPrice, setSelectedPrice] = React.useState<number>();
 
   async function setSelectedShare(symbol: string, date: Date) {
     setSelectedSymbol(symbol);
-    setSelectedDate(date);
     if (symbol === "") {
       setSelectedPrice(undefined);
     } else {
       const startDate = dateAddDays(date, -5);
-      const endDate = dateAddDays(date, 1);
       const res = await query2FinanceYahooV8Chart(
         symbol,
         "1d",
-        Math.round(startDate.setUTCHours(0, 0, 0) / 1000),
-        Math.round(endDate.setUTCHours(23, 59, 59) / 1000)
+        Math.round(startDate.getTime() / 1000),
+        Math.round(date.getTime() / 1000)
       );
       const result = res?.chart.result[0];
       if (result !== undefined) {
@@ -53,9 +53,9 @@ export const SharesInput = (props: SharesInputProps) => {
             Math.round(result.meta.regularMarketPrice * 100) / 100
           );
         } else {
-          const openPrices = quotes[0].open;
+          const closePrices = quotes[0].close;
           setSelectedPrice(
-            Math.round(openPrices[openPrices.length - 1] * 100) / 100
+            Math.round(closePrices[closePrices.length - 1] * 100) / 100
           );
         }
       }
@@ -78,16 +78,17 @@ export const SharesInput = (props: SharesInputProps) => {
         }}
       >
         <Grid item lg={3} md={3} sm={4} xs={12}>
-          <KeyboardDatePicker
-            format="dd.MM.yyyy"
+          <KeyboardDateTimePicker
+            format="dd.MM.yyyy HH:mm"
             id="date-picker-dialog"
             label="Kaufzeitpunkt"
             inputVariant="outlined"
             value={selectedDate}
             onChange={(_, value) => {
               if (value) {
-                const date = parse(value, "dd.MM.yyyy", new Date());
+                const date = parse(value, "dd.MM.yyyy HH:mm", new Date());
                 const validDate = date < new Date() ? date : new Date();
+                setSelectedDate(validDate);
                 setSelectedShare(selectedSymbol, validDate);
               }
             }}

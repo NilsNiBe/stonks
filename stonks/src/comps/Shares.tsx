@@ -97,21 +97,11 @@ export const Shares = () => {
     return res!.chart.result[0];
   }
 
-  async function addPurchase(
-    date: Date,
-    symbol: string,
-    amount: number,
-    price?: number
-  ) {
+  async function addPurchase(date: Date, symbol: string, amount: number) {
     const foundShare = shares.find(
       x => x.symbol.toUpperCase() === symbol.toUpperCase()
     );
     if (foundShare !== undefined) {
-      foundShare.purchases.push({
-        id: uuidv4(),
-        timeStamp: date.getTime(),
-        amount,
-      });
       const minTimeStamp = getMinTimeStamp(foundShare);
       if (minTimeStamp > date.getTime()) {
         foundShare.chartResult = await getChartResultFromApi(
@@ -119,6 +109,11 @@ export const Shares = () => {
           minTimeStamp
         );
       }
+      foundShare.purchases.push({
+        id: uuidv4(),
+        timeStamp: date.getTime(),
+        amount,
+      });
     } else {
       shares.push({
         symbol,

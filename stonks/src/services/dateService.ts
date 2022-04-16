@@ -1,4 +1,5 @@
 export function dateAddDays(date: Date, numberOfDays: number) {
-  date.setDate(date.getDate() + numberOfDays);
-  return date;
+  const res = new Date(date);
+  res.setDate(res.getDate() + numberOfDays);
+  return res;
 }

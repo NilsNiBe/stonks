@@ -21,12 +21,12 @@ function createRows(share: Share): TheRow {
   const name = share.symbol;
   const quote = share.chartResult!.indicators.quote[0];
   const closeDayBefore = quote.close[quote.close.length - 2];
-  const closeLatest = quote.close[quote.open.length - 1];
-  const closeLatestDiff = closeLatest - closeDayBefore;
-  const percentChangeToday = (closeLatestDiff / closeDayBefore) * 100;
+  const latestValue = quote.close[quote.open.length - 1];
+  const latestValueDiff = latestValue - closeDayBefore;
+  const latestPercentChange = (latestValueDiff / closeDayBefore) * 100;
   const purchases = share.purchases;
-  const shareCount = purchases.map(x => x.amount).reduce((x, y) => x + y);
-  const shareValue = shareCount * closeDayBefore;
+  const totalCount = purchases.map(x => x.amount).reduce((x, y) => x + y);
+  const totalValue = totalCount * latestValue;
   const rowPurchases = share.purchases
     .map(x => ({
       id: x.id,
@@ -35,13 +35,21 @@ function createRows(share: Share): TheRow {
       buyPrice: getPriceForTimeStamp(x.timeStamp, share.chartResult!),
     }))
     .sort((a, b) => a.timeStamp - b.timeStamp);
+  const totalValueAtTimeOfPurchase = rowPurchases
+    .map(x => x.buyPrice * x.amount)
+    .reduce((x, y) => x + y);
+  const totalValueDiff = totalValue - totalValueAtTimeOfPurchase;
+  const totalPercentChange =
+    (totalValueDiff / totalValueAtTimeOfPurchase) * 100;
   return {
     name,
-    shareCount,
-    closeToday: closeDayBefore,
-    closeLatestDiff,
-    percentChangeToday,
-    shareValue,
+    totalCount,
+    totalValue,
+    totalValueDiff,
+    totalPercentChange,
+    latestValue,
+    latestValueDiff,
+    latestPercentChange,
     rowPurchases,
   };
 }
@@ -58,9 +66,10 @@ export const SharesTable = (props: SharesTableProps) => {
             <TableCell />
             <TableCell>Aktie</TableCell>
             <TableCell align="right">Menge</TableCell>
-            <TableCell align="right">Gesamt</TableCell>
-            <TableCell align="right">Wert</TableCell>
-            <TableCell align="right">G/V</TableCell>
+            <TableCell align="right">Gesamtwert</TableCell>
+            <TableCell align="right">G/V (gesamt)</TableCell>
+            <TableCell align="right">Aktienwert</TableCell>
+            <TableCell align="right">G/V (aktuell)</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

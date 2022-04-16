@@ -34,11 +34,13 @@ const useRowStyles = makeStyles({
 
 export interface TheRow {
   name: string;
-  shareCount: number;
-  closeToday: number;
-  closeLatestDiff: number;
-  percentChangeToday: number;
-  shareValue: number;
+  totalCount: number;
+  totalValue: number;
+  totalValueDiff: number;
+  totalPercentChange: number;
+  latestValue: number;
+  latestValueDiff: number;
+  latestPercentChange: number;
   rowPurchases: TheRowPurchase[];
 }
 
@@ -74,26 +76,36 @@ export const SharesTableRow = (props: SharesTableRowProps) => {
         <TableCell component="th" scope="row">
           {row.name}
         </TableCell>
-        <TableCell align="right">{row.shareCount}</TableCell>
+        <TableCell align="right">{row.totalCount}</TableCell>
         <TableCell align="right">
-          {formatterCurrency.format(row.shareValue)}
-        </TableCell>
-        <TableCell align="right">
-          {formatterCurrency.format(row.closeToday)}
+          {formatterCurrency.format(row.totalValue)}
         </TableCell>
         <TableCell
           align="right"
           style={{
-            color: Math.sign(row.percentChangeToday) === -1 ? "red" : "green",
+            color: Math.sign(row.totalPercentChange) === -1 ? "red" : "green",
           }}
         >
-          {`${row.closeLatestDiff.toFixed(2)} (${numberWithPercentage(
-            row.percentChangeToday
+          {`${row.totalValueDiff.toFixed(2)} (${numberWithPercentage(
+            row.totalPercentChange
+          )})`}
+        </TableCell>
+        <TableCell align="right">
+          {formatterCurrency.format(row.latestValue)}
+        </TableCell>
+        <TableCell
+          align="right"
+          style={{
+            color: Math.sign(row.latestPercentChange) === -1 ? "red" : "green",
+          }}
+        >
+          {`${row.latestValueDiff.toFixed(2)} (${numberWithPercentage(
+            row.latestPercentChange
           )})`}
         </TableCell>
       </TableRow>
       <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box margin={1}>
               {/* <Typography variant="h6" gutterBottom component="div">
@@ -112,7 +124,7 @@ export const SharesTableRow = (props: SharesTableRowProps) => {
                   {row.rowPurchases.map(r => (
                     <TableRow key={r.id}>
                       <TableCell component="th" scope="row">
-                        {new Date(r.timeStamp).toLocaleDateString()}
+                        {new Date(r.timeStamp).toLocaleString()}
                       </TableCell>
                       <TableCell>{r.amount}</TableCell>
                       <TableCell align="right">
