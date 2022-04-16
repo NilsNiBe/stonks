@@ -63,9 +63,6 @@ function createRows(share: Share): TheRow {
 }
 
 export const SharesTable = (props: SharesTableProps) => {
-  const shares = props.shares;
-  React.useEffect(() => {}, [shares]);
-
   return (
     <TableContainer component={Paper}>
       <Table aria-label="collapsible table" padding="checkbox">

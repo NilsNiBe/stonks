@@ -68,13 +68,13 @@ export const SharesTableRow = (props: SharesTableRowProps) => {
 
   return (
     <>
-      <TableRow className={classes.root} style={{ backgroundColor: "#cfe8fc" }}>
+      <TableRow
+        className={classes.root}
+        style={{ backgroundColor: "#cfe8fc" }}
+        onClick={() => setOpen(!open)}
+      >
         <TableCell>
-          <IconButton
-            aria-label="expand row"
-            size="small"
-            onClick={() => setOpen(!open)}
-          >
+          <IconButton aria-label="expand row" size="small">
             {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
           </IconButton>
         </TableCell>
