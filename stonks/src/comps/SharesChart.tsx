@@ -69,10 +69,6 @@ export const SharesChart = (props: SharesChartProps) => {
             domain={[initialState.bottom, initialState.top]}
             type="number"
             yAxisId="1"
-            tickFormatter={x => {
-              console.log(x);
-              return x;
-            }}
           />
           <Tooltip />
           <Line
