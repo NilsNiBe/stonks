@@ -119,17 +119,18 @@ export const SharesTableRow = (props: SharesTableRowProps) => {
               <Table size="small" aria-label="purchases">
                 <TableHead>
                   <TableRow>
-                    <TableCell>Datum</TableCell>
-                    <TableCell>Menge</TableCell>
+                    <TableCell align="right">Datum</TableCell>
+                    <TableCell align="right">Menge</TableCell>
+                    <TableCell align="right">Gesamtwert</TableCell>
+                    <TableCell align="right">(gesamt) G/V</TableCell>
                     <TableCell align="right">Kaufpreis</TableCell>
-                    <TableCell align="right">G/V</TableCell>
                     <TableCell align="right" />
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {row.rowPurchases.map(r => (
                     <TableRow key={r.id}>
-                      <TableCell component="th" scope="row">
+                      <TableCell component="th" scope="row" align="right">
                         {new Date(r.timeStamp).toLocaleString([], {
                           year: "numeric",
                           month: "numeric",
@@ -138,9 +139,9 @@ export const SharesTableRow = (props: SharesTableRowProps) => {
                           minute: "2-digit",
                         })}
                       </TableCell>
-                      <TableCell>{r.amount}</TableCell>
+                      <TableCell align="right">{r.amount}</TableCell>
                       <TableCell align="right">
-                        {formatterCurrency.format(r.buyPrice)}
+                        {formatterCurrency.format(r.buyPrice * r.amount)}
                       </TableCell>
                       <TableCell
                         align="right"
@@ -149,9 +150,12 @@ export const SharesTableRow = (props: SharesTableRowProps) => {
                             Math.sign(r.priceDiff) === -1 ? "red" : "green",
                         }}
                       >
-                        {`${r.priceDiff.toFixed(2)} (${numberWithPercentage(
-                          r.percentChange
-                        )})`}
+                        {`${(r.priceDiff * r.amount).toFixed(
+                          2
+                        )} (${numberWithPercentage(r.percentChange)})`}
+                      </TableCell>
+                      <TableCell align="right">
+                        {formatterCurrency.format(r.buyPrice)}
                       </TableCell>
                       <TableCell align="right">
                         <Delete
