@@ -3,11 +3,6 @@ import "./App.css";
 import { Shares } from "./comps/Shares";
 import Background from "./img/stonks.jpg";
 
-// function getDateDiff(date1: Date, date2: Date) : number {
-//   var diff = Math.abs(date1.getTime() - date2.getTime());
-//   return Math.ceil(diff / (1000 * 3600 * 24));
-// }
-
 const App = () => {
   const sectionStyle = {
     width: "100%",
@@ -17,9 +12,9 @@ const App = () => {
 
   return (
     <div className="App">
-      <header className="App-header" style={sectionStyle}>
+      <main className="App-main" style={sectionStyle}>
         <Shares />
-      </header>
+      </main>
     </div>
   );
 };
