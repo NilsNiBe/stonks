@@ -15,8 +15,8 @@ const yahooApi = {
  * Stock quote data
  * @param symbol stock symbol
  * @param interval granularity (1m (for 7 days period max), 2m, 5m, 15m, 30m, 60m, 90m, 1h (for 730 day period max), 1d, 5d, 1wk, 1mo, 3mo)
- * @param period1 start of period
- * @param period2 end of period
+ * @param period1 start of period in seconds
+ * @param period2 end of period in seconds
  * @returns
  */
 export async function query2FinanceYahooV8Chart(
